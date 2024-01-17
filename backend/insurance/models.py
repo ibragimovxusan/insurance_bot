@@ -6,13 +6,13 @@ REGION_CHOICES = (
 )
 
 PERSON_TYPE = (
-    ('PHYSICAL_PERSON', 'PHYSICAL_PERSON'),
-    ('LEGAL_ENTITY', 'LEGAL_ENTITY')
+    (0, 'PHYSICAL_PERSON'),
+    (1, 'LEGAL_ENTITY')
 )
 
 CITIZENSHIP = (
-    ('Uzbek', 'Uzbek'),
-    ('Other', 'Other')
+    (0, 'Uzbek'),
+    (1, 'Other')
 )
 
 CAR_TYPES = (
@@ -33,12 +33,10 @@ class InsurancePeriod(models.Model):
 class Account(models.Model):
     telegram_id = models.CharField(max_length=50, unique=True)
     username = models.CharField(max_length=100, unique=True, null=True, blank=True)
-    citizenship = models.CharField(max_length=15, choices=CITIZENSHIP, default='Uzbek')
-    first_name = models.CharField(max_length=225)
-    last_name = models.CharField(max_length=225)
-    middle_name = models.CharField(max_length=225)
+    citizenship = models.IntegerField(choices=CITIZENSHIP, default=0)
+    full_name = models.CharField(max_length=225)
     phone_number = models.CharField(max_length=15, unique=True)
-    person_type = models.CharField(choices=PERSON_TYPE, max_length=15, default='PHYSICAL_PERSON')
+    person_type = models.IntegerField(choices=PERSON_TYPE, default=0)
     car_type = models.IntegerField(choices=CAR_TYPES, default=0)
     region = models.IntegerField(choices=REGION_CHOICES, default=0)
     insurance_period = models.ForeignKey(InsurancePeriod, on_delete=models.SET_NULL, null=True, blank=True)
@@ -46,18 +44,7 @@ class Account(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return f"{self.first_name}"
-
-    @property
-    def full_name(self):
-        if self.first_name and self.last_name and self.middle_name:
-            return f"{self.last_name} {self.first_name} {self.middle_name}"
-        elif self.first_name and self.last_name:
-            return f"{self.first_name} {self.last_name} XXX"
-        elif self.first_name:
-            return f"{self.first_name} XXX XXX"
-        else:
-            return f"{self.phone_number}"
+        return f"{self.full_name}"
 
 
 class CarDriver(models.Model):

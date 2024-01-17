@@ -3,6 +3,6 @@ from .views import InsurancePeriodListView, CarDriverListView, AccountCreateAPIV
 
 
 urlpatterns = [
-    path('insurances', InsuranceListView.as_view(), name='insurances'),
+    path('insurances', InsurancePeriodListView.as_view(), name='insurances'),
     path('user/', AccountCreateAPIView.as_view(), name='create_user')
 ]

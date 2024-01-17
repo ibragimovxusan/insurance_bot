@@ -20,6 +20,9 @@ class CarDriverListView(generics.ListAPIView):
     serializer_class = CarDriverSerializer
 
 
-class AccountCreateAPIView(generics.CreateAPIView):
+class AccountCreateAPIView(generics.GenericAPIView):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
